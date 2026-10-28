@@ -1,0 +1,73 @@
+name: Voixa
+
+options:
+  bundleIdPrefix: com.techlevin
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+
+packages:
+  VoixaKit:
+    path: Packages/VoixaKit
+
+targets:
+  Voixa:
+    type: application
+    platform: macOS
+    sources:
+      - App/Sources
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Voixa
+        LSUIElement: true
+        LSApplicationCategoryType: public.app-category.productivity
+        NSMicrophoneUsageDescription: Voixa listens to your voice while you hold the dictation key and transcribes it on this Mac. Audio never leaves your device.
+    entitlements:
+      path: App/Voixa.entitlements
+      properties:
+        # Not sandboxed: typing into other apps needs Accessibility and a global event tap.
+        com.apple.security.device.audio-input: true
+    dependencies:
+      - package: VoixaKit
+        product: VoixaKit
+      # Runs the speech model in its own process; see Helper/Sources/main.swift.
+      - target: VoixaTranscriber
+        embed: true
+        codeSign: true
+        copy:
+          destination: executables
+    configFiles:
+      Debug: Config/Base.xcconfig
+      Release: Config/Base.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.techlevin.voixa.mac
+        PRODUCT_NAME: Voixa
+        ENABLE_HARDENED_RUNTIME: YES
+
+  VoixaTranscriber:
+    type: tool
+    platform: macOS
+    sources:
+      - Helper/Sources
+    dependencies:
+      - package: VoixaKit
+        product: VoixaKit
+      - package: VoixaKit
+        product: VoixaEngines
+    configFiles:
+      Debug: Config/Base.xcconfig
+      Release: Config/Base.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.techlevin.voixa.mac.transcriber
+        PRODUCT_NAME: VoixaTranscriber
+        ENABLE_HARDENED_RUNTIME: YES
+        SKIP_INSTALL: YES
