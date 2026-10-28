@@ -39,6 +39,14 @@ make build
 open build/Build/Products/Debug/Voixa.app
 ```
 
+That runs the Debug build from the project folder. To install a Release build into `/Applications` for everyday use:
+
+```bash
+make install
+```
+
+Or run `make dmg` to get `build/Voixa-<version>.dmg`, a drag-to-Applications disk image. It is not notarized yet, so other Macs will refuse to open it until it's signed with a Developer ID certificate (see the roadmap).
+
 Voixa lives in the menu bar (microphone icon); it has no Dock icon.
 
 **Keep permissions across rebuilds (recommended for development):** builds are ad-hoc signed by default, and macOS forgets Voixa's permissions every time an ad-hoc build changes. To sign with your own Apple Development certificate instead:
@@ -122,7 +130,10 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for how the pieces fit together
 
 ```bash
 make open    # generate Voixa.xcodeproj and open it in Xcode
-make build   # build the app and helper
+make build   # build the app and helper (Debug)
+make install # build Release, copy to /Applications and launch it
+make dmg     # build Release and package build/Voixa-<version>.dmg
+make icon    # redraw the app icon from scripts/make-icon.swift
 make test    # run unit tests
 ```
 

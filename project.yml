@@ -22,6 +22,7 @@ targets:
     platform: macOS
     sources:
       - App/Sources
+      - App/Resources
     info:
       path: App/Info.plist
       properties:
@@ -50,6 +51,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.techlevin.voixa.mac
         PRODUCT_NAME: Voixa
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ENABLE_HARDENED_RUNTIME: YES
 
   VoixaTranscriber:
